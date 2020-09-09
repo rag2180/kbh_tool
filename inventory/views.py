@@ -92,7 +92,7 @@ def edit_ingredient(request, ingredient_id):
             ingredient = ingredient_form.save(commit=False)
             ingredient.save()
             # redirect_path = '/ingredients_and_overheads/'.format(ingredient.id)
-            return redirect('ingredient')
+            return redirect('ingredients')
     else:
         ingredient_form = IngredientForm(instance=ingredient)
 
