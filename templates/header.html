@@ -44,9 +44,10 @@
 			  <ul class="nav nav-pills nav-stacked">
 				<li><a href='/'>Home</a></li>
 				<li><a href='{% url 'products' %}'>Products</a></li>
+                <li><a href='{% url 'customers' %}'>Customers</a></li>
 				<li><a href='#'>Orders</a></li>
-                <li><a href='#'>Ingredients</a></li>
-                <li><a href='#'>Overheads</a></li>
+                <li><a href='{% url 'ingredients'%}'>Ingredients</a></li>
+                <li><a href='{% url 'overheads' %}'>Overheads</a></li>
 			  </ul>
 			</div> <!--well bs-sidebar affix-->
 		  </div> <!--col-sm-2-->
