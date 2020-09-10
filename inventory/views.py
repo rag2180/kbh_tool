@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from .models import Product, Ingredient, OverheadItem, Customer
-from .forms import IngredientForm, OverheadItemForm, CustomerForm
+from .models import Product, Ingredient, OverheadItem, Customer, Category
+from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm
 from datetime import datetime
 
 def home(request):
@@ -31,6 +31,12 @@ def customers(request):
     return render(request, 'customers.html', {'customers': customers})
 
 
+def categories(request):
+    print("inside customers")
+    categories = Category.objects.all()
+    return render(request, 'categories.html', {'categories': categories})
+
+
 def add_product(request):
     return render(request, "add_product.html", context={})
 
@@ -50,6 +56,22 @@ def add_ingredient(request):
 
     ingredient_form = IngredientForm()
     return render(request, 'add_ingredients.html', {'ingredient_form': ingredient_form})
+
+
+def add_category(request):
+    print("creating categories")
+    if request.method == "POST":
+        category_form = CategoryForm(request.POST)
+        if category_form.is_valid():
+            category_form.save()
+        else:
+            print("form is not valid")
+            return render(request, 'add_category.html',
+                          {'alert': True, 'category_form': category_form})
+        return redirect('add_category')
+
+    category_form = CategoryForm()
+    return render(request, 'add_category.html', {'category_form': category_form})
 
 
 def add_customer(request):
@@ -97,6 +119,23 @@ def edit_ingredient(request, ingredient_id):
         ingredient_form = IngredientForm(instance=ingredient)
 
     return render(request, 'add_ingredients.html', {'ingredient_form': ingredient_form})
+
+
+def edit_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    print(category)
+    if request.method == "POST":
+        category_form = CategoryForm(request.POST, instance=category)
+        if category_form.is_valid():
+            category = category_form.save(commit=False)
+            category.save()
+            redirect_path = 'categories'
+            return redirect(redirect_path)
+    else:
+        category_form = CategoryForm(instance=category)
+
+    return render(request, 'add_category.html', {'category_form': category_form})
+
 
 
 def edit_customer(request, customer_id):

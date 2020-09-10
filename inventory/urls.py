@@ -18,4 +18,8 @@ urlpatterns = [
     url(r'^customers', customers, name="customers"),
     url(r'^add_customer', add_customer, name="add_customer"),
     url(r'^edit_customer/(?P<customer_id>\d+)/edit/', edit_customer, name="edit_customer"),
+
+    url(r'^categories', categories, name="categories"),
+    url(r'^add_categories', add_category, name="add_category"),
+    url(r'^category/(?P<category_id>\d+)/edit/', edit_category, name="edit_category"),
     ]

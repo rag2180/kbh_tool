@@ -26,15 +26,19 @@ class IngredientForm(ModelForm):
         model = Ingredient
         fields = '__all__'
 
+
+class CategoryForm(ModelForm):
+    prefix = 'category'
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
 #ProductFormset = formset_factory(ProductForm, extra=1)
-#
-#
-# class CategoryForm(ModelForm):
-#     prefix = 'category'
-#
-#     class Meta:
-#         model = Category
-#         fields = '__all__'
+
+
+
 #
 #
 # class OrderForm(ModelForm):
