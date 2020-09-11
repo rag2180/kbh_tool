@@ -86,7 +86,7 @@ class ProductIngredient(models.Model):
     """
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    quantity = models.FloatField(help_text="quantity of unit of this ingredient in a product")
+    quantity = models.FloatField()
 
     def __str__(self):
         return self.product.name+" | "+self.ingredient.name
@@ -95,7 +95,7 @@ class ProductIngredient(models.Model):
 class ProductOverhead(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     overheaditem = models.ForeignKey(OverheadItem, on_delete=models.CASCADE)
-    cost = models.FloatField(help_text='Total Cost of overhead item')
+    cost = models.FloatField()
 
     def __str__(self):
         return self.product.name+" | "+self.overheaditem.name+" | "+str(self.cost)

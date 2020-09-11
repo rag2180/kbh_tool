@@ -1,0 +1,22 @@
+{% extends 'header.html' %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to Delete: {{ obj.name }}</p>
+    <input type="submit" value="Confirm" class="btn btn-danger">
+
+    {% if type == "ingredient" %}
+    <a href="{% url 'ingredients' %}" class="btn btn-light">Cancel</a>
+    {% elif type == "product" %}
+    <a href="{% url 'products' %}" class="btn btn-light">Cancel</a>
+    {% elif type == "customer" %}
+    <a href="{% url 'customers' %}" class="btn btn-light">Cancel</a>
+    {% elif type == "overhead" %}
+    <a href="{% url 'overheads' %}" class="btn btn-light">Cancel</a>
+    {% elif type == "category" %}
+    <a href="{% url 'categories' %}" class="btn btn-light">Cancel</a>
+    {% endif %}
+
+</form>
+{% endblock %}

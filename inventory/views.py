@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from .models import Product, Ingredient, OverheadItem, Customer, Category
-from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse, HttpResponseRedirect
+from .models import Product, Ingredient, OverheadItem, Customer, Category, ProductIngredient, ProductOverhead
+from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm, ProductForm,ProductIngredientForm
 from datetime import datetime
+from django.forms import inlineformset_factory, modelformset_factory
 
 def home(request):
     return render(request, 'index.html', {})
@@ -38,7 +39,31 @@ def categories(request):
 
 
 def add_product(request):
-    return render(request, "add_product.html", context={})
+    if request.method == 'POST':
+        print("Post Request")
+        # # print(product_form)
+        # print(product_form.is_valid())
+        # if product_form.is_valid():
+        #     print("Form is Valid")
+        #     print(product_form.cleaned_data)
+        #     product_name = product_form.cleaned_data['name']
+        #     product_category = product_form.cleaned_data['category']
+        #     profit_percent = product_form.cleaned_data['profit_percent']
+        #     note = product_form.cleaned_data['note']
+        #     product = Product.objects.create(name=product_name, category=product_category, profit_percent=profit_percent,
+        #                                   note=note)
+        #     print(product)
+        #     redirect_path = 'add_ingredient_of_product/{}'.format(product.id)
+        #     return redirect(redirect_path, product_id=product.id)
+        # else:
+        #     product_form = ProductForm()
+        #     return render(request, 'add_product.html', {'alert': True, 'product_form': product_form})
+
+    else:
+        product_form = ProductForm()
+        ingredient_form = ProductIngredientForm()
+
+    return render(request, 'add_product.html', {'product_form': product_form, 'ingredient_form': ingredient_form})
 
 
 def edit_product(request, product_id):
@@ -179,3 +204,75 @@ def edit_overhead(request, overhead_id):
         overhead_item_form = OverheadItemForm(instance=overhead)
 
     return render(request, 'add_overhead.html', {'overhead_item_form': overhead_item_form})
+
+
+def customer_detail(request, customer_id):
+    print("Inside customer detail")
+    customer = get_object_or_404(Customer, id=customer_id)
+    # TODO: Show all past orders by this customer
+    return render(request, 'customer_detail.html', {'customer': customer})
+
+
+def product_detail(request, product_id):
+    """
+    Product Detail Page
+    :param request:
+    :param pk:
+    :return:
+    """
+    product = get_object_or_404(Product, pk=product_id)
+    all_product_ingredients = ProductIngredient.objects.filter(product=product)
+    all_product_overheads = ProductOverhead.objects.filter(product=product)
+    return render(request, 'product_detail.html', {'product': product,
+                                                               'ingredients': all_product_ingredients,
+                                                               'overheads': all_product_overheads})
+
+
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == "POST":
+        product.delete()
+        return redirect("ingredients")
+
+    context = {"obj": product, "type": "product"}
+    return render(request, "delete_ingredient.html", context)
+
+
+def delete_customer(request, customer_id):
+    customer = get_object_or_404(Customer, id=customer_id)
+    if request.method == "POST":
+        customer.delete()
+        return redirect("customers")
+
+    context = {"obj": customer, "type": "customer"}
+    return render(request, "delete_ingredient.html", context)
+
+
+def delete_ingredient(request, ingredient_id):
+    ingredient = get_object_or_404(Ingredient, id=ingredient_id)
+    if request.method == "POST":
+        ingredient.delete()
+        return redirect("ingredients")
+
+    context = {"obj": ingredient, "type": "ingredient"}
+    return render(request, "delete_ingredient.html", context)
+
+
+def delete_overhead(request, overhead_id):
+    overhead = get_object_or_404(OverheadItem, id=overhead_id)
+    if request.method == "POST":
+        overhead.delete()
+        return redirect("overheads")
+
+    context = {"obj": overhead, "type": "overhead"}
+    return render(request, "delete_ingredient.html", context)
+
+
+def delete_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    if request.method == "POST":
+        category.delete()
+        return redirect("categories")
+
+    context = {"obj": category, "type": "category"}
+    return render(request, "delete_ingredient.html", context)

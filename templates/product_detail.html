@@ -1,0 +1,63 @@
+{% extends 'header.html' %}
+{% block content %}
+
+
+    <h4>Product Information: {{ product.name }}</h4>
+    <div class="buttion_place">
+        <a href="{% url 'edit_product' product_id=product.id %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true"> + Edit Product</a>
+    </div>
+
+{#        <div class="buttion_place">#}
+{#            <a href="{% url 'edit' product.pk %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true"> + Edit Product</a>#}
+{#        </div>#}
+
+       <label><h6>Category</h6></label>: {{ product.category }}<br>
+       <label><h6>Cost Price</h6></label>: Rs.{{ product.cost_price }}<br>
+       <label><h6>Profit (%)</h6></label>: {{ product.profit_percent }} %<br>
+       <label><h6>Selling Price</h6></label>: Rs.{{ product.selling_price }}<br>
+       <label><h6>Note</h6></label>: {{ product.note }}<br><br>
+
+            <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Ingredient</th>
+                <th>Unit Cost</th>
+                <th>Quantity</th>
+                <th>Total Cost</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ing in ingredients %}
+
+                <tr>
+                    <td>{{ ing.ingredient.name }}</td>
+                    <td>Rs. {{ ing.ingredient.unit_cost }}/{{ ing.ingredient.unit }}</td>
+                    <td>{{ ing.quantity }} {{ ing.ingredient.unit }}</td>
+                    <td>Rs. {% widthratio ing.quantity 1 ing.ingredient.unit_cost %}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+            </table>
+        <br><br>
+
+            <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Overhead</th>
+                <th>Total Cost</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for overhead in overheads %}
+
+                <tr>
+                    <td>{{ overhead.overheaditem.name }}</td>
+                    <td>Rs. {{ overhead.cost }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+            </table>
+
+{% endblock %}

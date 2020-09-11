@@ -13,14 +13,6 @@ class ProductForm(ModelForm):
         fields = ['name', 'category', 'profit_percent', 'note']
 
 
-class ProductIngredientForm(ModelForm):
-    # prefix = 'productingredient'
-
-    class Meta:
-        model = ProductIngredient
-        fields = ['ingredient', 'quantity']
-
-
 class IngredientForm(ModelForm):
     class Meta:
         model = Ingredient
@@ -35,12 +27,27 @@ class CategoryForm(ModelForm):
         fields = '__all__'
 
 
+class OverheadItemForm(ModelForm):
+    class Meta:
+        model = OverheadItem
+        fields = '__all__'
+
+
+class ProductIngredientForm(ModelForm):
+    class Meta:
+        model = ProductIngredient
+        fields = ['ingredient', 'quantity']
+
+
+class ProductOverheadForm(ModelForm):
+    class Meta:
+        model = ProductOverhead
+        fields = '__all__'
+
+
 #ProductFormset = formset_factory(ProductForm, extra=1)
 
 
-
-#
-#
 # class OrderForm(ModelForm):
 #     class Meta:
 #         model = Order
@@ -52,18 +59,6 @@ class CategoryForm(ModelForm):
 #         model = OrderItem
 #         fields = '__all__'
 #
-
-
-class OverheadItemForm(ModelForm):
-    class Meta:
-        model = OverheadItem
-        fields = '__all__'
-#
-#
-# class ProductOverheadForm(ModelForm):
-#     class Meta:
-#         model = ProductOverhead
-#         fields = '__all__'
 
 
 class CustomerForm(ModelForm):
