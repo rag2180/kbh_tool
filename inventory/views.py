@@ -41,6 +41,7 @@ def categories(request):
 def add_product(request):
     if request.method == 'POST':
         print("Post Request")
+        print(request.POST)
         # # print(product_form)
         # print(product_form.is_valid())
         # if product_form.is_valid():
@@ -62,8 +63,7 @@ def add_product(request):
     else:
         product_form = ProductForm()
         ingredient_form = ProductIngredientForm()
-
-    return render(request, 'add_product.html', {'product_form': product_form, 'ingredient_form': ingredient_form})
+        return render(request, 'add_product.html', {'product_form': product_form, 'ingredient_form': ingredient_form})
 
 
 def edit_product(request, product_id):
