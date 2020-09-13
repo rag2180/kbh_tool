@@ -124,7 +124,8 @@
           {% if user.is_authenticated %}
               <p>You are logged in </p>
               <p>Hey there: {{ user.username }}, Howdy</p>
-              <p><a href="{% url 'logout' %}">Logout Here</a></p>
+{#              <p><a href="{% url 'logout' %}">Logout Here</a></p>#}
+              <p><button onclick="location.href='{% url 'logout' %}'" class="btn btn-dark" style="float: right;">Logout</button></p>
               {% block content %}
               {% endblock %}
           {% else %}
