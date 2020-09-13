@@ -45,6 +45,11 @@ class ProductOverheadForm(ModelForm):
         fields = '__all__'
 
 
+# ProductIngredientFormset = modelformset_factory(
+#     ProductIngredientForm,
+#     fields=('ingredient', 'quantity',)
+# )
+
 #ProductFormset = formset_factory(ProductForm, extra=1)
 
 

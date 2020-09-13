@@ -1,43 +1,15 @@
 {% extends 'header.html' %}
 {% block content %}
+
 <h2 class="product_heder">Add a new Product </h2>
 
 {% if alert %}
     <script>alert("Product Already Exists! If you don't think so - Please contact Raghav!")</script>
 {% endif %}
 
-<script>
-    {#let form_count = Number($("[name=extra_field_count]").val());#}
-    {#// get extra form count so we know what index to use for the next item.#}
-    {##}
-    {#$("#add-another").click(function() {#}
-    {#    form_count ++;#}
-    {##}
-    {#    let element = $('<input type="text"/>');#}
-    {#    element.attr('name', 'extra_field_' + form_count);#}
-    {#    $("#forms").append(element);#}
-    {#    // build element and append it to our forms container#}
-    {##}
-    {#    $("[name=extra_field_count]").val(form_count);#}
-    {#    // increment form count so our view knows to populate#}
-    {#    // that many fields for validation#}
-    {##}
-
-    $(".add_ingredient").click(
-        function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var form = $(".ingredient-form:first");
-            $(form.clone()).appendTo(".ingredient-box");
-        }
-    )
-
-</script>
-
 <div class="container col-md-10">
-    <form>
+    <form method="POST">
     {% csrf_token %}
-
       {% for field in product_form %}
         <div class="form-group row">
             <label for="id_{{ field.name }}" class="col-2 col-form-label">{{ field.label }}</label>
@@ -48,18 +20,19 @@
             </div>
         </div>
         {% endfor %}
-    <div class="ingredient-box">
-        <div class="form-group row ingredient-form">
-            <label for="id_{{ ingredient_form.ingredient.name }}"  class="col-2 col-form-label"> {{ ingredient_form.ingredient.label }} </label> {{ ingredient_form.ingredient }}
-            <label for="id_{{ ingredient_form.quantity.name}}"  class="col-2 col-form-label"> {{ ingredient_form.quantity.label }} </label> {{ ingredient_form.quantity }}
-        </div>
-    </div>
 
-    <button class="btn btn-primary add_ingredient">Add More Ingredient</button>
+
+    <h5>Add Ingredient</h5><br>
+    <form method="POST">
+        {% csrf_token %}
+        {{ formset.as_p }}
+        <button name="add_more_ingredient" type="submit" class="btn btn-secondary">Add More</button>
+    </form>
+    <br>
 
         <div class="form-group row">
             <div class="offset-sm-2 col-sm-6">
-                <button type="submit" class="btn btn-primary">Add Product</button>
+                <button name="add_product" type="submit" class="btn btn-primary">Add Product</button>
             </div>
         </div>
     </form>

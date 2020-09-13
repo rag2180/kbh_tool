@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse, HttpResponseRedirect
 from .models import Product, Ingredient, OverheadItem, Customer, Category, ProductIngredient, ProductOverhead
-from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm, ProductForm,ProductIngredientForm
+from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm, ProductForm, ProductIngredientForm
 from datetime import datetime
 from django.forms import inlineformset_factory, modelformset_factory
+from django.urls import reverse
+
 
 def home(request):
     return render(request, 'index.html', {})
@@ -39,31 +41,55 @@ def categories(request):
 
 
 def add_product(request):
+    ProductIngredientFormset = modelformset_factory(ProductIngredient, fields=('ingredient', 'quantity',))
     if request.method == 'POST':
-        print("Post Request")
-        # # print(product_form)
-        # print(product_form.is_valid())
+        print("inside post of add product ")
+        formset = ProductIngredientFormset(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                print(form)
+
+            return redirect('add_product')
+        # product_form = ProductForm(request.POST)
+        # print(request.POST)
         # if product_form.is_valid():
-        #     print("Form is Valid")
-        #     print(product_form.cleaned_data)
+        #     if "add_more_ingredient" in request.POST.keys():
+        #         print("Add More Ingredient button is clicked")
+        #     elif "add_product" in request.POST.keys():
+        #         print("Add Product button is clicked")
+        #         product_name = product_form.cleaned_data['name']
+        #         product_category = product_form.cleaned_data['category']
+        #         profit_percent = product_form.cleaned_data['profit_percent']
+        #         note = product_form.cleaned_data['note']
+        #         product = Product.objects.get_or_create(name=product_name, category=product_category,
+        #                                                                           profit_percent=profit_percent,
+        #                                                                           note=note)
+        #
+        #         formset = ProductIngredientFormset(instance=product)
+        #         formset.save()
+        #         product.save()
+        #         return redirect('add_product', product_id=product.id)
+        #     else:
+        #         print("No button detected")
+        # if product_form.is_valid():
         #     product_name = product_form.cleaned_data['name']
         #     product_category = product_form.cleaned_data['category']
         #     profit_percent = product_form.cleaned_data['profit_percent']
         #     note = product_form.cleaned_data['note']
-        #     product = Product.objects.create(name=product_name, category=product_category, profit_percent=profit_percent,
-        #                                   note=note)
-        #     print(product)
-        #     redirect_path = 'add_ingredient_of_product/{}'.format(product.id)
-        #     return redirect(redirect_path, product_id=product.id)
-        # else:
-        #     product_form = ProductForm()
-        #     return render(request, 'add_product.html', {'alert': True, 'product_form': product_form})
+        #     product = Product.objects.create(name=product_name, category=product_category,
+        #                                  profit_percent=profit_percent,
+        #                                  note=note)
+        #     formset = ProductIngredientFormset(instance=product)
+
+        redirect_path = 'add_product'
+        return redirect(redirect_path)
 
     else:
+        print("Inside GET request of add product - {}".format(request))
         product_form = ProductForm()
-        ingredient_form = ProductIngredientForm()
+        formset = ProductIngredientFormset(queryset=ProductIngredient.objects.none())
 
-    return render(request, 'add_product.html', {'product_form': product_form, 'ingredient_form': ingredient_form})
+    return render(request, 'add_product.html', {'product_form': product_form, 'formset': formset})
 
 
 def edit_product(request, product_id):
