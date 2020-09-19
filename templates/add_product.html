@@ -8,8 +8,9 @@
 {% endif %}
 
 <div class="container col-md-10">
-    <form method="POST">
+    <form class="new-product-form" method="POST">
     {% csrf_token %}
+
       {% for field in product_form %}
         <div class="form-group row">
             <label for="id_{{ field.name }}" class="col-2 col-form-label">{{ field.label }}</label>
@@ -21,22 +22,74 @@
         </div>
         {% endfor %}
 
-
-    <h5>Add Ingredient</h5><br>
-    <form method="POST">
-        {% csrf_token %}
-        {{ formset.as_p }}
-        <button name="add_more_ingredient" type="submit" class="btn btn-secondary">Add More</button>
-    </form>
-    <br>
+    <table class="table">
+        <thead>
+            <td>Ingredient Name</td>
+            <td>Quantity</td>
+        </thead>
+        <tbody class="table-body ingredient-box">
+            <tr class="form-group table-row ingredient-form">
+                <td>{{ ingredient_form.ingredient }}</td>
+                <td>{{ ingredient_form.quantity }}</td>
+            </tr>
+        </tbody>
+    </table>
 
         <div class="form-group row">
             <div class="offset-sm-2 col-sm-6">
-                <button name="add_product" type="submit" class="btn btn-primary">Add Product</button>
+                <button class="btn btn-secondary add_ingredient">Add More Ingredient</button>
             </div>
         </div>
+
+    <table class="table">
+        <thead>
+            <td>Overhead Name</td>
+            <td>Cost</td>
+        </thead>
+        <tbody class="table-body overhead-box">
+            <tr class="form-group table-row overhead-form">
+                <td>{{ overhead_form.overheaditem }}</td>
+                <td>{{ overhead_form.cost }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-6">
+                <button class="btn btn-light add_overhead">Add More Overhead</button>
+            </div>
+        </div>
+
+        <button type="submit"  class="btn btn-primary btn-block">Add Product</button>
     </form>
 </div>
 
+
+<script>
+    $(".add_ingredient").click(
+        function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var form = $(".ingredient-form:first");
+            let clone = form.clone();
+            $(clone).appendTo(".ingredient-box");
+            $(clone.children()[0].children).val(false)
+            $(clone.children()[1].children).val(false)
+        }
+    );
+
+    $(".add_overhead").click(
+        function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var form = $(".overhead-form:first");
+            let clone = form.clone();
+            $(clone).appendTo(".overhead-box");
+            $(clone.children()[0].children).val(false)
+            $(clone.children()[1].children).val(false)
+        }
+    );
+
+</script>
 
 {% endblock %}
