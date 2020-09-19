@@ -3,17 +3,15 @@
 
 
     <h4>Product Information: {{ product.name }}</h4>
-{#    <div class="buttion_place">#}
-{#        <a href="{% url 'edit_product' product_id=product.id %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true"> + Edit Product</a>#}
-{#    </div>#}
-
-{#        <div class="buttion_place">#}
-{#            <a href="{% url 'edit' product.pk %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true"> + Edit Product</a>#}
-{#        </div>#}
+    <br>
+    <div class="buttion_place">
+        <a href="{% url 'edit_product' product_id=product.id %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true"> + Edit Product</a>
+    </div>
+    <p class="text alert-warning"> You cannot edit ingredients and overheads</p>
+    <br>
 
        <label><h6>Category</h6></label>: {{ product.category }}<br>
        <label><h6>Cost Price</h6></label>: Rs.{{ product.cost_price }}<br>
-       <label><h6>Profit (%)</h6></label>: {{ product.profit_percent }} %<br>
        <label><h6>Selling Price</h6></label>: Rs.{{ product.selling_price }}<br>
        <label><h6>Note</h6></label>: {{ product.note }}<br><br>
 

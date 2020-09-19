@@ -50,7 +50,6 @@ class OverheadItem(models.Model):
 class Product(models.Model):
     name = models.CharField(help_text="Name of Item", max_length=255, unique=True)
     category = models.ForeignKey(Category, help_text="Category of this product item", on_delete=models.CASCADE)
-    profit_percent = models.IntegerField(help_text='profit in % that you want from this product', default=0)
     cost_price = models.FloatField(help_text="This is calculated using ingredients and overheads of your product. "
                                              "This is cost price per unit.",
                                    null=True, blank=True)
@@ -74,9 +73,7 @@ class Product(models.Model):
         for i in all_product_overheads:
             self.cost_price += i.cost
 
-        self.selling_price = self.cost_price + (self.cost_price*(self.profit_percent/100.0))
         self.cost_price = round(self.cost_price)
-        self.selling_price = round(self.selling_price)
         super(Product, self).save(*args, **kwargs)
 
 

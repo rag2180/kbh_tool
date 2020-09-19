@@ -52,9 +52,9 @@ def add_product(request):
         if product_form.is_valid():
             product_name = product_form.cleaned_data['name']
             product_category = product_form.cleaned_data['category']
-            profit_percent = product_form.cleaned_data['profit_percent']
+            selling_price = product_form.cleaned_data['selling_price']
             note = product_form.cleaned_data['note']
-            product = Product.objects.create(name=product_name, category=product_category, profit_percent=profit_percent,
+            product = Product.objects.create(name=product_name, category=product_category, selling_price=selling_price,
                                           note=note)
 
             for ing, quantity in zip(all_ingredients, all_quantities):
@@ -63,6 +63,7 @@ def add_product(request):
             for overhead, cost in zip(all_overheads, all_overheads_cost):
                 ProductOverhead.objects.create(product=product, overheaditem=OverheadItem.objects.get(id=overhead), cost=float(cost))
 
+            product.save()
             redirect_path = 'products'
             return redirect(redirect_path)
         else:
@@ -79,7 +80,20 @@ def add_product(request):
 
 
 def edit_product(request, product_id):
-    return render(request, 'add_product.html', {'product_form': {}})
+    print("Inside edit product with id - {}".format(product_id))
+    product = get_object_or_404(Product, id=product_id)
+    print(product)
+    if request.method == "POST":
+        product_form = ProductForm(request.POST, instance=product)
+        if product_form.is_valid():
+            product = product_form.save(commit=False)
+            product.save()
+            redirect_path = 'products'
+            return redirect(redirect_path)
+    else:
+        product_form = ProductForm(instance=product)
+    # return HttpResponse("Inside edit product with id - {}".format(product_id))
+    return render(request, 'add_product.html', {'product_form': product_form})
 
 
 def add_ingredient(request):
@@ -237,7 +251,7 @@ def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     if request.method == "POST":
         product.delete()
-        return redirect("ingredients")
+        return redirect("products")
 
     context = {"obj": product, "type": "product"}
     return render(request, "delete_ingredient.html", context)

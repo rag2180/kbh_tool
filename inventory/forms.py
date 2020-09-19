@@ -10,7 +10,7 @@ class ProductForm(ModelForm):
 
     class Meta:
         model = Product
-        fields = ['name', 'category', 'profit_percent', 'note']
+        fields = ['name', 'category', 'selling_price', 'note']
 
 
 class IngredientForm(ModelForm):

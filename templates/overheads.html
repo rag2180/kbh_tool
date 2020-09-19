@@ -23,7 +23,7 @@
         <tr>
             <th>
 {#                <a href="{% url 'detail' product.pk %}">#}
-                    {{ overhead.pk }}
+                    {{ forloop.counter }}
 {#                </a>#}
             </th>
             <td>{{ overhead.name }}</td>

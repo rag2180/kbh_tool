@@ -23,7 +23,7 @@
             <tr>
                 <th>
                     <a href="{% url 'customer_detail' customer.id %}">
-                        {{ customer.id }}
+                        {{ forloop.counter }}
                     </a>
                 </th>
                 <td>{{ customer.name }}</td>
