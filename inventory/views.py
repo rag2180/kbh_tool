@@ -85,8 +85,9 @@ def add_product(request):
             return redirect(redirect_path)
         else:
             product_form = ProductForm()
+            ingredient_form = ProductIngredientForm()
             overhead_form = ProductOverheadForm()
-            return render(request, 'add_product.html', {'alert': True, 'product_form': product_form, 'overhead_form': overhead_form})
+            return render(request, 'add_product.html', {'alert': True, 'product_form': product_form, 'ingredient_form': ingredient_form, 'overhead_form': overhead_form})
 
     else:
         product_form = ProductForm()
