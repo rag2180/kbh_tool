@@ -42,7 +42,7 @@ class ProductIngredientForm(ModelForm):
 class ProductOverheadForm(ModelForm):
     class Meta:
         model = ProductOverhead
-        fields = '__all__'
+        fields = ['overheaditem', 'cost']
 
 
 #ProductFormset = formset_factory(ProductForm, extra=1)

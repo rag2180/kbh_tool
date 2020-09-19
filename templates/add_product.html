@@ -23,7 +23,7 @@
 
     <table class="table">
         <thead>
-            <td>Name</td>
+            <td>Ingredient Name</td>
             <td>Quantity</td>
         </thead>
         <tbody class="table-body ingredient-box">
@@ -36,10 +36,30 @@
     
         <div class="form-group row">
             <div class="offset-sm-2 col-sm-6">
-                <button class="btn btn-primary add_ingredient">Add More Ingredient</button>
-                <button type="submit"  class="btn btn-primary">Add Product</button>
+                <button class="btn btn-secondary add_ingredient">Add More Ingredient</button>
             </div>
         </div>
+
+    <table class="table">
+        <thead>
+            <td>Overhead Name</td>
+            <td>Cost</td>
+        </thead>
+        <tbody class="table-body overhead-box">
+            <tr class="form-group table-row overhead-form">
+                <td>{{ overhead_form.overheaditem }}</td>
+                <td>{{ overhead_form.cost }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-6">
+                <button class="btn btn-light add_overhead">Add More Overhead</button>
+            </div>
+        </div>
+
+        <button type="submit"  class="btn btn-primary btn-block">Add Product</button>
     </form>
 </div>
 
@@ -52,6 +72,18 @@
             var form = $(".ingredient-form:first");
             let clone = form.clone();
             $(clone).appendTo(".ingredient-box");
+            $(clone.children()[0].children).val(false)
+            $(clone.children()[1].children).val(false)
+        }
+    );
+
+    $(".add_overhead").click(
+        function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var form = $(".overhead-form:first");
+            let clone = form.clone();
+            $(clone).appendTo(".overhead-box");
             $(clone.children()[0].children).val(false)
             $(clone.children()[1].children).val(false)
         }

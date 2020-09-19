@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse, HttpResponseRedirect
 from .models import Product, Ingredient, OverheadItem, Customer, Category, ProductIngredient, ProductOverhead
-from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm, ProductForm,ProductIngredientForm
+from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm, ProductForm,ProductIngredientForm, ProductOverheadForm
 from datetime import datetime
 from django.forms import inlineformset_factory, modelformset_factory
+import json
+
 
 def home(request):
     return render(request, 'index.html', {})
@@ -40,30 +42,56 @@ def categories(request):
 
 def add_product(request):
     if request.method == 'POST':
-        print("Post Request")
-        print(request.POST)
+        d = dict(request.POST)
+        print(d)
+        print(d['ingredient'])
+        print(d['overheaditem'])
+        # print("Request Body")
+        # print(request.body)
+        # print("Json Dumps")
+        # print(json.dumps(request.POST))
         # # print(product_form)
-        # print(product_form.is_valid())
-        # if product_form.is_valid():
-        #     print("Form is Valid")
-        #     print(product_form.cleaned_data)
-        #     product_name = product_form.cleaned_data['name']
-        #     product_category = product_form.cleaned_data['category']
-        #     profit_percent = product_form.cleaned_data['profit_percent']
-        #     note = product_form.cleaned_data['note']
-        #     product = Product.objects.create(name=product_name, category=product_category, profit_percent=profit_percent,
-        #                                   note=note)
-        #     print(product)
-        #     redirect_path = 'add_ingredient_of_product/{}'.format(product.id)
-        #     return redirect(redirect_path, product_id=product.id)
-        # else:
-        #     product_form = ProductForm()
-        #     return render(request, 'add_product.html', {'alert': True, 'product_form': product_form})
+        all_ingredients = d['ingredient']
+        all_quantities = d['quantity']
+        all_overheads = d['overheaditem']
+        all_overheads_cost = d['cost']
+        print(all_ingredients, all_quantities)
+        product_form = ProductForm(request.POST)
+        if product_form.is_valid():
+            print("This is cleaned data of product form....")
+            print(product_form.cleaned_data)
+            print("Done....")
+            product_name = product_form.cleaned_data['name']
+            product_category = product_form.cleaned_data['category']
+            profit_percent = product_form.cleaned_data['profit_percent']
+            note = product_form.cleaned_data['note']
+            print(product_name, product_category, profit_percent, note)
+            product = Product.objects.create(name=product_name, category=product_category, profit_percent=profit_percent,
+                                          note=note)
+            print(product)
+            print("============")
+            print(all_ingredients, all_quantities)
+            for ing, quantity in zip(all_ingredients, all_quantities):
+                print("Adding Product Ingredient: {} || Quantity: {}".format(ing, quantity))
+                ProductIngredient.objects.create(product=product, ingredient=Ingredient.objects.get(id=ing), quantity=float(quantity))
+                print("Added")
+
+            for overhead, cost in zip(all_overheads, all_overheads_cost):
+                print("Adding Product Overhead: {} || Cost: {}".format(overhead, cost))
+                ProductOverhead.objects.create(product=product, overheaditem=OverheadItem.objects.get(id=overhead), cost=float(cost))
+
+            redirect_path = 'products'
+            return redirect(redirect_path)
+        else:
+            product_form = ProductForm()
+            overhead_form = ProductOverheadForm()
+            return render(request, 'add_product.html', {'alert': True, 'product_form': product_form, 'overhead_form': overhead_form})
 
     else:
         product_form = ProductForm()
         ingredient_form = ProductIngredientForm()
-        return render(request, 'add_product.html', {'product_form': product_form, 'ingredient_form': ingredient_form})
+        overhead_form = ProductOverheadForm()
+        return render(request, 'add_product.html', {'product_form': product_form, 'ingredient_form': ingredient_form, 'overhead_form': overhead_form})
 
 
 def edit_product(request, product_id):
