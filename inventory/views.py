@@ -44,41 +44,23 @@ def categories(request):
 def add_product(request):
     if request.method == 'POST':
         d = dict(request.POST)
-        print(d)
-        print(d['ingredient'])
-        print(d['overheaditem'])
-        # print("Request Body")
-        # print(request.body)
-        # print("Json Dumps")
-        # print(json.dumps(request.POST))
-        # # print(product_form)
         all_ingredients = d['ingredient']
         all_quantities = d['quantity']
         all_overheads = d['overheaditem']
         all_overheads_cost = d['cost']
-        print(all_ingredients, all_quantities)
         product_form = ProductForm(request.POST)
         if product_form.is_valid():
-            print("This is cleaned data of product form....")
-            print(product_form.cleaned_data)
-            print("Done....")
             product_name = product_form.cleaned_data['name']
             product_category = product_form.cleaned_data['category']
             profit_percent = product_form.cleaned_data['profit_percent']
             note = product_form.cleaned_data['note']
-            print(product_name, product_category, profit_percent, note)
             product = Product.objects.create(name=product_name, category=product_category, profit_percent=profit_percent,
                                           note=note)
-            print(product)
-            print("============")
-            print(all_ingredients, all_quantities)
+
             for ing, quantity in zip(all_ingredients, all_quantities):
-                print("Adding Product Ingredient: {} || Quantity: {}".format(ing, quantity))
                 ProductIngredient.objects.create(product=product, ingredient=Ingredient.objects.get(id=ing), quantity=float(quantity))
-                print("Added")
 
             for overhead, cost in zip(all_overheads, all_overheads_cost):
-                print("Adding Product Overhead: {} || Cost: {}".format(overhead, cost))
                 ProductOverhead.objects.create(product=product, overheaditem=OverheadItem.objects.get(id=overhead), cost=float(cost))
 
             redirect_path = 'products'
@@ -97,7 +79,7 @@ def add_product(request):
 
 
 def edit_product(request, product_id):
-    return render(request, "add_product.html", context={})
+    return render(request, 'add_product.html', {'product_form': {}})
 
 
 def add_ingredient(request):
@@ -106,7 +88,6 @@ def add_ingredient(request):
         if ingredient_form.is_valid():
                 ingredient_form.save()
         else:
-            print("INGREDIENT NOT VALID")
             return render(request, 'add_ingredients.html', {'alert': True, 'ingredient_form': ingredient_form})
 
     ingredient_form = IngredientForm()
@@ -114,13 +95,11 @@ def add_ingredient(request):
 
 
 def add_category(request):
-    print("creating categories")
     if request.method == "POST":
         category_form = CategoryForm(request.POST)
         if category_form.is_valid():
             category_form.save()
         else:
-            print("form is not valid")
             return render(request, 'add_category.html',
                           {'alert': True, 'category_form': category_form})
         return redirect('add_category')
@@ -178,7 +157,6 @@ def edit_ingredient(request, ingredient_id):
 
 def edit_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
-    print(category)
     if request.method == "POST":
         category_form = CategoryForm(request.POST, instance=category)
         if category_form.is_valid():
@@ -192,11 +170,8 @@ def edit_category(request, category_id):
     return render(request, 'add_category.html', {'category_form': category_form})
 
 
-
 def edit_customer(request, customer_id):
-    print("inside edit customer")
     customer = get_object_or_404(Customer, id=customer_id)
-    print(customer)
     if request.method == "POST":
         customer_form = CustomerForm(request.POST, instance=customer)
         if customer_form.is_valid():
