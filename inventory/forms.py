@@ -53,17 +53,17 @@ class ProductOverheadForm(ModelForm):
 #ProductFormset = formset_factory(ProductForm, extra=1)
 
 
-# class OrderForm(ModelForm):
-#     class Meta:
-#         model = Order
-#         fields = ['customer', 'delivery_status', 'payment_status', 'note_from_customer']
-#
-#
-# class OrderItemForm(ModelForm):
-#     class Meta:
-#         model = OrderItem
-#         fields = '__all__'
-#
+class OrderForm(ModelForm):
+    class Meta:
+        model = Order
+        fields = ['customer', 'delivery_status', 'payment_status', 'note_from_customer']
+
+
+class OrderItemForm(ModelForm):
+    class Meta:
+        model = OrderItem
+        fields = ['product_id', 'quantity']
+
 
 
 class CustomerForm(ModelForm):

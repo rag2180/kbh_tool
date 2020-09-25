@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse, HttpResponseRedirect
-from .models import Product, Ingredient, OverheadItem, Customer, Category, ProductIngredient, ProductOverhead
-from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm, ProductForm,ProductIngredientForm, ProductOverheadForm
+from .models import Product, Ingredient, OverheadItem, Customer, Category, ProductIngredient, ProductOverhead, Order, OrderItem
+from .forms import IngredientForm, OverheadItemForm, CustomerForm, CategoryForm, ProductForm,ProductIngredientForm, \
+    ProductOverheadForm, OrderForm, OrderItemForm
 from datetime import datetime
 from django.forms import inlineformset_factory, modelformset_factory
 from django.urls import reverse
@@ -39,6 +40,11 @@ def categories(request):
     print("inside customers")
     categories = Category.objects.all()
     return render(request, 'categories.html', {'categories': categories})
+
+
+def orders(request):
+    orders = Order.objects.all()
+    return render(request, 'orders.html', {'orders': orders})
 
 
 def add_product(request):
@@ -152,6 +158,50 @@ def add_customer(request):
         customer_form = CustomerForm()
 
     return render(request, 'add_customer.html', {'customer_form': customer_form})
+
+
+def add_order(request):
+    if request.method == 'POST':
+        print("Post Request")
+        d = dict(request.POST)
+        all_product_ids = d['product_id']
+        all_product_quantity = d['quantity']
+        order_form = OrderForm(request.POST)
+        if order_form.is_valid():
+            print(order_form.cleaned_data)
+            customer = order_form.cleaned_data['customer']
+            note = order_form.cleaned_data['note_from_customer']
+            payment_status = order_form.cleaned_data['payment_status']
+            delivery_status = order_form.cleaned_data['delivery_status']
+
+            order = Order.objects.create(customer=customer, note_from_customer=note, payment_status=payment_status,
+                                         delivery_status=delivery_status)
+            for prod, quantity in zip(all_product_ids, all_product_quantity):
+                order_item = OrderItem.objects.create(order_id=order, product_id=Product.objects.get(id=prod), quantity=float(quantity))
+                order_item.save()
+
+            order.save()
+            redirect_path = 'orders'
+            return redirect(redirect_path)
+        else:
+            print("Invalid Order Form")
+
+    else:
+        order_form = OrderForm()
+        orderitem_form = OrderItemForm()
+        return render(request, 'add_order.html', {'order_form': order_form, 'orderitem_form': orderitem_form})
+
+
+def order_detail(request, order_id):
+    return HttpResponse("Order Detail - {}".format(order_id))
+
+
+def edit_order(request, order_id):
+    return HttpResponse("Edit Order - {}".format(order_id))
+
+
+def delete_order(request, order_id):
+    return HttpResponse("Delete Order - {}".format(order_id))
 
 
 def edit_ingredient(request, ingredient_id):

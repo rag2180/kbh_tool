@@ -29,4 +29,10 @@ urlpatterns = [
     url(r'^add_categories', add_category, name="add_category"),
     url(r'^category/(?P<category_id>\d+)/edit/', edit_category, name="edit_category"),
     url(r'^category/(?P<category_id>\d+)/delete/', delete_category, name="delete_category"),
+
+    url(r'^orders', orders, name="orders"),
+    url(r'^add_order', add_order, name="add_order"),
+    url(r'^(?P<order_id>\d+)$', order_detail, name="order_detail"),
+    url(r'^order/(?P<order_id>\d+)/edit/', edit_order, name="edit_order"),
+    url(r'^order/(?P<order_id>\d+)/delete/', delete_order, name="delete_order"),
     ]

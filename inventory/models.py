@@ -121,5 +121,4 @@ class OrderItem(models.Model):
 
     def save(self, *args, **kwargs):
         self.order_id.total_price += (self.product_id.selling_price * self.quantity)
-        self.order_id.save(*args, **kwargs)
         super(OrderItem, self).save(*args, **kwargs)
