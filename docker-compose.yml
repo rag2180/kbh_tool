@@ -1,0 +1,85 @@
+version: '3'
+
+services:
+
+  kbh_tool_dev:
+    stdin_open: true
+    tty: true
+    restart: always
+    container_name: kbh_tool_dev
+    env_file:
+      - .env
+    networks:
+      kbh-docker:
+        ipv4_address: ${KBH_SERVER_IP}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/root/kbh_tool/
+      - kbh-volume:/root/kbh_tool/api/media
+    ports:
+      - "8000:8000"
+    working_dir: /root/kbh_tool
+    links:
+      - postgres_kbh
+    depends_on:
+      - postgres_kbh
+    entrypoint:
+      - /bin/bash
+      - -c
+      #      - sleep infinity
+      - python3 manage.py runserver 0.0.0.0:8000
+
+  kbh_tool_prod:
+    stdin_open: true
+    tty: true
+    restart: always
+    container_name: kbh_tool_prod
+    env_file:
+      - .env
+    networks:
+      kbh-docker:
+        ipv4_address: ${KBH_SERVER_IP}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/root/kbh_tool/
+      - kbh-volume:/root/kbh_tool/api/media
+    ports:
+      - "127.0.0.1:8000:8000"
+    working_dir: /root/kbh_tool
+    links:
+      - postgres_kbh
+    depends_on:
+      - postgres_kbh
+    entrypoint:
+      - /bin/bash
+      - -c
+      #      - sleep infinity
+      - gunicorn kbh_tool.wsgi -b 0.0.0.0:8000 --workers 2 -k gthread --threads 16 --timeout 300 --log-level info --limit-request-line 8190 --access-logfile -
+
+
+  postgres_kbh:
+    restart: always
+    container_name: postgres_db
+    image: postgres:11
+    env_file:
+      - .env
+    networks:
+      kbh-docker:
+        ipv4_address: ${POSTGRES_IP}
+    ports:
+      - "5532:5532"
+    volumes:
+      - kbh-volume:/var/lib/postgresql/data/
+
+networks:
+  kbh-docker:
+    external:
+      name: kbh-docker
+
+volumes:
+  kbh-volume:
+    external: true

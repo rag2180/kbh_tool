@@ -1,43 +1,18 @@
-# Base Image
-FROM python:3.6
+FROM ubuntu:18.04
 
-# create and set working directory
-RUN mkdir /app
-WORKDIR /app
+ENV TZ=Asia/Kolkata
 
-# Add current directory code to working directory
-ADD . /app/
-
-# set default environment variables
-ENV PYTHONUNBUFFERED 1
-ENV LANG C.UTF-8
-ENV DEBIAN_FRONTEND=noninteractive 
-
-# set project environment variables
-# grab these via Python's os.environ
-# these are 100% optional here
-ENV PORT=8888
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        tzdata \
-        python3-setuptools \
-        python3-pip \
-        python3-dev \
-        python3-venv \
-        git \
-        && \
-    apt-get clean && \
+RUN apt-get update && \
+    apt-get dist-upgrade --yes && \
+	apt-get install -y python3-dev python3-pip libssl-dev libcurl4-openssl-dev git rabbitmq-server curl p7zip-full man-db && \
+	pip3 install --upgrade pip && \
+	pip3 install --no-cache-dir --upgrade pyinotify || \
+	apt-get autoremove -y && apt-get clean -y && \
     rm -rf /var/lib/apt/lists/*
 
+ADD . /root/kbh_tool/
+RUN pip3 install --no-cache-dir --trusted-host pypi.python.org -r /root/kbh_tool/requirements.txt
 
-# install environment dependencies
-RUN pip3 install --upgrade pip
-RUN pip3 install -r requirements.txt
-#RUN pip3 install pipenv
-#
-## Install project dependencies
-#RUN pipenv install --skip-lock --system --dev
+ENTRYPOINT /bin/bash
 
-EXPOSE 8888
-CMD gunicorn kbh_tool.wsgi:application --bind 0.0.0.0:$PORT
+EXPOSE 8000
