@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'kbh_tool.urls'
@@ -78,8 +79,12 @@ WSGI_APPLICATION = 'kbh_tool.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd81lm7bm09me36',
+        'HOST': 'ec2-54-158-122-162.compute-1.amazonaws.com',
+        'PORT': 5432,
+        'USER': 'dobboistrkqldv',
+        'PASSWORD': 'c6ec9c55ba2e17dd95a4494557a43d61d67de4899cd8390c4e3d19987d5e4f41'
     }
 }
 
