@@ -26,7 +26,7 @@ SECRET_KEY = 'u%q&&%q^qv6+uqlhrl0^xr=&$j^z)@nh(w2hs9@9ikikk8irsp'
 # DEBUG = True
 DEBUG = int(os.environ.get('DEBUG', default=1))
 
-ALLOWED_HOSTS = ['https://kbh-tool.herokuapp.com', '127.0.0.1', 'localhost', '0.0.0.0']
+ALLOWED_HOSTS = ['kbh-tool.herokuapp.com', '127.0.0.1', 'localhost', '0.0.0.0']
 
 
 # Application definition
