@@ -16,6 +16,8 @@
     <a href="{% url 'overheads' %}" class="btn btn-light">Cancel</a>
     {% elif type == "category" %}
     <a href="{% url 'categories' %}" class="btn btn-light">Cancel</a>
+    {% elif type == "order" %}
+    <a href="{% url 'orders' %}" class="btn btn-light">Cancel</a>
     {% endif %}
 
 </form>

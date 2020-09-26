@@ -99,7 +99,7 @@ def edit_product(request, product_id):
     else:
         product_form = ProductForm(instance=product)
     # return HttpResponse("Inside edit product with id - {}".format(product_id))
-    return render(request, 'add_product.html', {'product_form': product_form})
+    return render(request, 'edit_product.html', {'product_form': product_form})
 
 
 def add_ingredient(request):
@@ -177,8 +177,8 @@ def add_order(request):
             order = Order.objects.create(customer=customer, note_from_customer=note, payment_status=payment_status,
                                          delivery_status=delivery_status)
             for prod, quantity in zip(all_product_ids, all_product_quantity):
-                order_item = OrderItem.objects.create(order_id=order, product_id=Product.objects.get(id=prod), quantity=float(quantity))
-                order_item.save()
+                print("LOOP - {} {}".format(prod, quantity))
+                OrderItem.objects.create(order_id=order, product_id=Product.objects.get(id=prod), quantity=float(quantity))
 
             order.save()
             redirect_path = 'orders'
@@ -193,15 +193,42 @@ def add_order(request):
 
 
 def order_detail(request, order_id):
-    return HttpResponse("Order Detail - {}".format(order_id))
+    print("Inside customer detail")
+    order = get_object_or_404(Order, id=order_id)
+    all_order_items = OrderItem.objects.filter(order_id=order_id)
+    print(order)
+    print(all_order_items)
+    return render(request, 'order_detail.html', {'order': order, 'all_order_items': all_order_items})
 
 
 def edit_order(request, order_id):
-    return HttpResponse("Edit Order - {}".format(order_id))
+    print("Inside edit order with id - {}".format(order_id))
+    order = get_object_or_404(Order, id=order_id)
+    print(order)
+    if request.method == "POST":
+        order_form = OrderForm(request.POST, instance=order)
+        if order_form.is_valid():
+            print("Is Valid")
+            order = order_form.save(commit=False)
+            order.save()
+            redirect_path = 'orders'
+            return redirect(redirect_path)
+    else:
+        print("Inside else - {}".format(order))
+        order_form = OrderForm(instance=order)
+    return render(request, 'edit_order.html', {'order_form': order_form})
 
 
 def delete_order(request, order_id):
-    return HttpResponse("Delete Order - {}".format(order_id))
+    order = get_object_or_404(Order, id=order_id)
+    all_order_items = OrderItem.objects.filter(order_id=order_id)
+    all_order_items.delete()
+    if request.method == "POST":
+        order.delete()
+        return redirect("orders")
+
+    context = {"obj": order, "type": "order"}
+    return render(request, "delete_ingredient.html", context)
 
 
 def edit_ingredient(request, ingredient_id):

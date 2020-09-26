@@ -57,7 +57,7 @@ class Product(models.Model):
     note = models.CharField(max_length=1000, help_text='Note for self about product', null=True, blank=True)
 
     def __str__(self):
-        return self.name+" | Rs."+str(self.cost_price)+"/"+str(self.category.unit)
+        return self.name+" | Rs."+str(self.selling_price)+"/"+str(self.category.unit)
 
     def save(self, *args, **kwargs):
         self.cost_price = 0
@@ -120,5 +120,6 @@ class OrderItem(models.Model):
         return "{} | {}".format(self.order_id, self.product_id)
 
     def save(self, *args, **kwargs):
+        print("SAVE OF ORDER ITEM - {} {} {}".format(self.order_id.total_price, self.product_id.selling_price, self.quantity))
         self.order_id.total_price += (self.product_id.selling_price * self.quantity)
         super(OrderItem, self).save(*args, **kwargs)
